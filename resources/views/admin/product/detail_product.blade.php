@@ -60,13 +60,26 @@
                             Add to cart
                         </button>
                     </form>
-                    
-                    
 
                 </span>
                 <p><b>Availability:</b> In Stock</p>
                 <p><b>Condition:</b> New</p>
                 <p><b>Brand:</b> E-SHOPPER</p>
+                <p style="display: inline;"><b>Rating:</b> 
+                <ul class="list-inline" style="display: inline-block; background-color: inherit; border-bottom: none;margin: 0px 10px">
+                    @for($count = 1; $count <=5; $count++)
+                        @php
+                            if($count <= $rating_star)
+                                $color = 'color: #ffcc00';
+                            else
+                            $color = 'color: #ccc';
+                        @endphp
+                    <li  style="cursor:pointer; {{$color}}; font-size:18px;">
+                        &#9733;
+                    </li>
+                    @endfor
+                </ul>
+                </p>
                 <a href=""><img src="images/product-details/share.png" class="share img-responsive"  alt="" /></a>
             </div><!--/product-information-->
         </div>
@@ -76,7 +89,8 @@
     <div class="col-sm-12">
         <ul class="nav nav-tabs">
             <li><a href="#details" data-toggle="tab">Details</a></li>
-            <li class="active"><a href="#reviews" data-toggle="tab">Reviews (5)</a></li>
+            <li class="active"><a href="#reviews" data-toggle="tab">Comment (5)</a></li>
+            <li><a href="#tag" data-toggle="tab">Reviews</a></li>
         </ul>
     </div>
     <div class="tab-content">
@@ -89,8 +103,7 @@
                 </div>
             </div>
         </div>
-        
-       
+
         <div class="tab-pane fade active in" id="reviews" >
             <div class="col-sm-12">
                 <ul>
@@ -118,11 +131,43 @@
                     </span>
                     <textarea name="comment_content" class="comment_content" placeholder="Bình luận của bạn..." ></textarea>
                     <div id="notify_comment"></div>
-                    <b>Rating: </b> 
                     <button type="button" class="btn btn-default pull-right send_comment">
                         Submit
                     </button>
                 </form>
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="tag" >
+            <div class="col-sm-12">
+
+                    @foreach($rating as $key => $val)
+                <div class="row style_comment" style="margin-bottom:10px">
+                    
+                    <div class="col-md-2">
+                            <img width="100%" src="https://nhanhoa.com/uploads/news/no-avatar.png" class="img img-responsive img-thumbnail" width="100px">
+                        </div>
+                        <div class="col-md-10">
+                            <div style="color:green;">{{$val->rating_user}}</div>
+                            <ul class="list-inline" style="background-color: inherit; border-bottom: none;margin: 7px 0px">
+                                @for($count = 1; $count <=5; $count++)
+                                    @php
+                                        if($count <= $val->rating_star)
+                                            $color = 'color: #ffcc00';
+                                        else
+                                        $color = 'color: #ccc';
+                                    @endphp
+                                <li  style="cursor:pointer; {{$color}}; font-size:18px;">
+                                    &#9733;
+                                </li>
+                                @endfor
+                            </ul>
+                            <p style="color:black;">{{$val->datebegin}}</p>
+                            <p>{{$val->rating_content}}</p>
+                    </div>
+                    
+                </div>
+                @endforeach
             </div>
         </div>
         

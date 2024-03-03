@@ -5,7 +5,7 @@
 			<div class="breadcrumbs">
 				<ol class="breadcrumb">
 				  <li><a href="#">Home</a></li>
-				  <li class="active">Shopping Cart</li>
+				  <li class="active">{{ $meta_desc }}</li>
 				</ol>
 			</div>
 			<?php
@@ -31,7 +31,7 @@
 						</tr>
 					</thead>
 					<tbody>							
-							@if(Session::get('cart') == true)
+							@if(Session::get('username') == false && Session::get('cart') == true)
 								@foreach(Session::get('cart') as $key => $cart)
 								<tr>
 									<td class="cart_product">
@@ -58,10 +58,41 @@
 									</td>
 								</tr>
 								@endforeach
+							@else
+								@php
+									$cart_user = DB::table('tbl_cart')->where('cart_user',Session::get('username'))
+												->join('tbl_product','tbl_product.product_id','=','tbl_cart.cart_id_product')->get(); 
+								@endphp
+								@foreach($cart_user as $cart)
+								<tr>
+									<td class="cart_product">
+										<a href="{{URL::to('/chi-tiet-san-pham/'.$cart->product_img)}}"><img src="/public/uploads/product/{{$cart->product_img}}" alt="" width="50px"></a>
+									</td>
+									<td class="cart_description">
+										<h4><a href="{{URL::to('/chi-tiet-san-pham/'.$cart->product_id)}}">{{$cart->product_name}}</a></h4>
+										<input name="order_product_id[]" class="order_product_id" type="hidden" value="{{$cart->product_id}}" />
+										<p>ID: {{$cart->product_id}}</p>
+									</td>
+									<td class="cart_price">
+										<p>{{number_format($cart->product_price, 0, '', ',')}} VND</p>
+									</td>
+									<td class="cart_quantity">
+										<div class="cart_quantity_button">
+											<input class="cart_quantity_input" type="text" name="cart_qty[]" value="{{$cart->quantity}}" autocomplete="off" size="2">
+										</div>
+									</td>
+									<td class="cart_total">
+										<p class="cart_total_price">{{number_format($cart->product_price * $cart->quantity, 0, '', ',')}} VND</p>
+									</td>
+									<td class="cart_delete">
+										<a class="cart_quantity_delete" href="{{URL::to('/delete-cart/'.$cart->cart_id)}}"><i class="fa fa-times"></i></a>
+									</td>
+								</tr>
+								@endforeach
 							@endif
 							<tr>
 								<td>
-									@if(Session::get('cart') == true || !empty(Session::get("cart")))
+									@if(Session::get('cart') == true || !empty(Session::get("cart")) || isset($cart_user))
 										<input type="submit" name="update_qty" class="btn btn-secondary btn-md" style="margin-bottom: 10px;" value="Cập nhật giỏ hàng"/>
 									@endif
 								</td>
@@ -70,7 +101,7 @@
 								<td></td>
 								<td></td>
 								<td>
-									@if(Session::get('cart') == true || !empty(Session::get("cart")))
+									@if(Session::get('cart') == true || !empty(Session::get("cart")) || isset($cart_user))
 										<a href="{{URL::to('/order-product')}}" id="order" class="btn btn-success btn-md" style="margin-bottom: 10px;">Thanh toán</a>
 									@endif
 								</td>

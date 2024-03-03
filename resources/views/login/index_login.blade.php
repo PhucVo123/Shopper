@@ -89,26 +89,8 @@
 						<div class="shop-menu pull-right">
 							<ul class="nav navbar-nav">
 								<li><a href="#"><i class="fa fa-star"></i> Wishlist</a></li>
-								
 								<li><a href="{{URL::to('cart')}}"><i class="fa fa-shopping-cart"></i> Cart</a></li>
-								
-									<?php 
-										use Illuminate\Support\Facades\Session;
-										use Illuminate\Support\Facades\URL;
-										$username = Session::get('username');
-										
-										if(!$username)
-										{
-											echo "<li><a href='".URL::to('login')."'><i class='fa fa-lock'></i> Login</a></li>";
-										}
-										else
-										{
-											echo "<li><a href='".URL::to('order-status')."'><i class='fa fa-crosshairs'></i> Order status</a></li>";
-											echo "<li><a><i class='fa fa-user'></i> Xin chao, ".$username."</a></li>";
-											echo "<li><a href='".URL::to('logout_user')."'>Logout</a></li>";
-										}
-									?>
-							
+								<li><a href="login.html"><i class="fa fa-lock"></i> Login</a></li>
 							</ul>
 						</div>
 					</div>
@@ -210,62 +192,10 @@
 			</div>
 		</div>
 	</section><!--/slider-->
-	
-	<section>
-		<div class="container">
-			<div class="row">
-				<div class="col-sm-3">
-					<div class="left-sidebar">
-						<h2>Category</h2>
-						<div class="panel-group category-products" id="accordian"><!--category-productsr-->
-						@foreach($all_category_product as $key => $cat_pro)
-						<div class="panel panel-default">
-							<div class="panel-heading">
-								<h4 class="panel-title">
-									<a href="{{URL::to('/danh-muc-san-pham/'.$cat_pro->category_name.'/'.$cat_pro->category_id)}}">
-										{{$cat_pro->category_name}}
-									</a>
-								</h4>
-							</div>
-						</div>
-						@endforeach
-						</div><!--/category-products-->
-					
-						<div class="brands_products"><!--brands_products-->
-							<h2>Brands</h2>
-							<div class="brands-name">
-								<ul class="nav nav-pills nav-stacked">
-							@foreach($all_brand as $key => $brand)
-				
-									<li><a href="{{URL::to('/thuong-hieu-san-pham/'.$brand->brand_id)}}"> <span class="pull-right">(50)</span>{{$brand->brand_name}}</a></li>
-							@endforeach
-								</ul>
-							</div>
-						</div><!--/brands_products-->
-						
-						<div class="price-range"><!--price-range-->
-							<h2>Price Range</h2>
-							<div class="well text-center">
-								 <input type="text" class="span2" value="" data-slider-min="0" data-slider-max="600" data-slider-step="5" data-slider-value="[250,450]" id="sl2" ><br />
-								 <b class="pull-left">$ 0</b> <b class="pull-right">$ 600</b>
-							</div>
-						</div><!--/price-range-->
-						
-						<div class="shipping text-center"><!--shipping-->
-							<img src="{{('/public/Front_end/images/home/shipping.jpg')}}" alt="" />
-						</div><!--/shipping-->
-					
-					</div>
-				</div>
-				
-				<div class="col-sm-9 padding-right">
-				@yield('content_home')
-				</div>
-			</div>
-		</div>
-	</section>
-	
-	<footer id="footer"><!--Footer-->
+    <section id="form"><!--form-->
+        @yield('login')
+    </section>
+    <footer id="footer"><!--Footer-->
 		<div class="footer-top">
 			<div class="container">
 				<div class="row">
@@ -433,7 +363,6 @@
     <script src="{{asset('/public/Front_end/js/main.js')}}"></script>
 	<script src="{{asset('/public/Back_end/js/comment.js')}}"></script>
 	<script src="{{asset('/public/Back_end/js/cart.js')}}"></script>
-	<script src="{{asset('/public/Back_end/js/rating.js')}}"></script>
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	<script src="sweetalert2.min.js"></script>
 	

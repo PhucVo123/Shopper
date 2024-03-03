@@ -108,12 +108,25 @@ class ProductController extends Controller
     {
         $get_product = DB::table('tbl_product')
         ->where('tbl_product.product_id',$product_id)->get();
+
         $cate_id = $get_product[0]->category_id;
+
         $all_category_product = DB::table('tbl_category_product')->get();
+
         $all_brand = DB::table('tbl_brand')->get();
+
         $related_product = DB::table('tbl_product')
         ->where('tbl_product.category_id',$cate_id)->whereNotIn('tbl_product.product_id',[$product_id])->get();
-        return view('admin.product.detail_product')->with('all_category_product',$all_category_product)->with('all_brand',$all_brand)->with('get_product',$get_product)->with('related_product',$related_product);
+        
+        $rating = DB::table('tbl_order_detail')->where('orderdetail_id_product',$product_id)
+        ->join('tbl_rating','tbl_rating.orderdetail_id','=','tbl_order_detail.orderdetail_id')->get();
+        $rating_star = DB::table('tbl_order_detail')->where('orderdetail_id_product',$product_id)
+        ->join('tbl_rating','tbl_rating.orderdetail_id','=','tbl_order_detail.orderdetail_id')->avg('rating_star');
+
+        $rating_star = round($rating_star);
+
+        return view('admin.product.detail_product')->with('all_category_product',$all_category_product)->with('all_brand',$all_brand)->with('get_product',$get_product)->with('related_product',$related_product)
+        ->with('rating',$rating)->with('rating_star',$rating_star);
     }
 
     public function load_comment(Request $request)

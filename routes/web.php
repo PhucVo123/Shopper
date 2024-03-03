@@ -14,7 +14,10 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index']);
 Route::get('/trang_chu','App\Http\Controllers\HomeController@index');
-
+Route::get('/login','App\Http\Controllers\HomeController@login');
+Route::post('/save-login','App\Http\Controllers\HomeController@save_login');
+Route::post('/save-logup','App\Http\Controllers\HomeController@save_logup');
+Route::get('/logout_user','App\Http\Controllers\HomeController@logout');
 Route::get('/danh-muc-san-pham/{category_product_name}/{category_product_id}','App\Http\Controllers\HomeController@category');
 
 
@@ -76,7 +79,13 @@ Route::post('/update-cart', 'App\Http\Controllers\CartController@update_cart');
 //Order
 Route::get('/order-product', 'App\Http\Controllers\CartController@order');
 Route::post('/checkout-product', 'App\Http\Controllers\OrderController@checkout');
-
+Route::get('/order-status', 'App\Http\Controllers\OrderController@order_status');
+Route::get('/rating/{pro_id}', 'App\Http\Controllers\OrderController@rating');
+Route::post('/send-rating', 'App\Http\Controllers\OrderController@send_rating');
+Route::get('/all-order', 'App\Http\Controllers\OrderController@all_order');
+Route::post('/confirm-shipping', 'App\Http\Controllers\OrderController@confirm_shipping');
+Route::post('/delete-order', 'App\Http\Controllers\OrderController@delete_order');
+Route::get('/completed-order/{pro_id}', 'App\Http\Controllers\OrderController@complete_order');
 //Search
 Route::post('/search', 'App\Http\Controllers\ProductController@search');
 Route::get('/result-search/{keyword}', 'App\Http\Controllers\ProductController@result_search');

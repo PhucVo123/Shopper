@@ -307,6 +307,15 @@
                                 <li><a href="{{URL::to('/all-comment')}}">Liệt kê các bình luận</a></li>
                             </ul>
                         </li>
+                        <li class="sub-menu">
+                            <a href="javascript:;">
+                                <i class="fa fa-book"></i>
+                                <span>Quản lý đơn hàng</span>
+                            </a>
+                            <ul class="sub">
+                                <li><a href="{{URL::to('/all-order')}}">Liệt kê các đơn hàng</a></li>
+                            </ul>
+                        </li>
 
                     </ul>            </div>
                 <!-- sidebar menu end-->
@@ -335,6 +344,7 @@
     <script src="{{asset('public/Back_end/js/jquery.slimscroll.js')}}"></script>
     <script src="{{asset('public/Back_end/js/jquery.nicescroll.js')}}"></script>
     <script src="{{asset('public/Back_end/js/confirm_comment.js')}}"></script>
+    <script src="{{asset('public/Back_end/js/order.js')}}"></script>
     <!--[if lte IE 8]><script language="javascript" type="text/javascript" src="{{asset('public/Back_end/js/flot-chart/excanvas.min.js')}}"></script><![endif]-->
     <script src="{{asset('public/Back_end/js/jquery.scrollTo.js')}}"></script>
     <!-- morris JavaScript -->	

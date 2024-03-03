@@ -3,7 +3,7 @@
 <div class="table-agile-info">
   <div class="panel panel-default">
     <div class="panel-heading">
-      Danh mục bình luận
+      Danh mục các đơn hàng
     </div>
     <div class="row w3-res-tb">
       <?php
@@ -35,63 +35,51 @@
                 <input type="checkbox"><i></i>
               </label>
             </th>
+            <th>Tài khoản</th>
             <th>Tên</th>
+            <th>Số điện thoại</th>
+            <th>Địa chỉ </th>
             <th>Email</th>
-            <th>Bình luận </th>
             <th>Sản phẩm</th>
-            <th>Ngày</th>
-            <th>Duyệt</th>
+            <th>Yêu cầu thêm</th>
+            <th>Đã giao hàng</th>
             <th style="width:30px;"></th>
           </tr>
         </thead>
         <tbody>
           <?php $count = 0 ; ?>
           
-          @foreach($all_comment as $key => $comment)
+          @foreach($all_order as $key => $order)
 
           <tr>
             <td><label class="i-checks m-b-none"><input type="checkbox" name="post[]"><i></i></label></td>
-            <td>{{ $comment->comment_name}}</td>
-            <td>{{ $comment->comment_email}}</td>
-            <td>{{ $comment->comment_content}}
-            <br>
-            <ol>
-            <?php 
-                foreach($comment_admin as $key => $admin)
-                {
-                  if($admin->comment_id_reply == $comment->comment_id)
-                  {
-                    echo "<li>".$admin->comment_content."</li>";
-                  }
-                }
-            ?>
-            </ol> 
-            <textarea class="form-control reply_comment{{ $comment->comment_id}}" rows="5"></textarea> 
-            <br> 
-            <button class="btn btn-default btn-xs btn-reply-comment" data-index="{{ $comment->comment_id}}" data-product="{{ $comment->product_id}}">Trả lời</button>
-            </td>
-            
-            <td><a href="{{URL::to('/chi-tiet-san-pham/'.$comment->product_id)}}">{{ $comment->product_name}}</a></td>
-            <td>{{ $comment->comment_date}}</td>
+            <td>@php echo DB::table('users')->where('id',$order->order_id_user)->value('name'); @endphp</td>
+            <td>{{ $order->order_username}}</td>
+            <td>{{ $order->order_phone}}</td>
+            <td>{{ $order->order_address}}</td>
+            <td>{{ $order->order_email}}</td>
+            <td><a href="{{URL::to('/chi-tiet-san-pham/'.$order->product_id)}}">{{ $order->product_name}}</a></td>
+            <td>{{ $order->order_message}}</td>
             <td>
                 <?php
-                if($comment->comment_status == 1)
+                if($order->orderdetail_status == 0)
                 {
-                    echo '<button class="btn btn-danger btn_confirm" data-status="0" data-index="'.$comment->comment_id.'">Bỏ duyệt</button>';
+                    echo '<button class="d-inline btn btn-success btn_confirm_shipping" style="margin-bottom:5px;" data-status="1" data-index="'.$order->orderdetail_id.'">Thành công</button>
+       
+                    <button class=" d-inline btn btn-danger  btn_delete_order" data-status="0" data-index="'.$order->orderdetail_id.'">Hủy đơn hàng</button> ';
                 }
                 else
                 {
-                    echo '<button class="btn btn-success btn_confirm" data-status="1" data-index="'.$comment->comment_id.'">Duyệt</button>';
+                    echo 'Đã giao thành công';
                 }
                  ?>
             </td>
             <td>
-              <a href="{{URL::to('/edit-product/'.$comment->comment_id)}}" class="active" ui-toggle-class="">
+              <a href="{{URL::to('/edit-order/'.$order->order_id)}}" class="active" ui-toggle-class="">
                 <i class="fa fa-pencil-square-o text-success text-active"></i>
               </a>
-              <a href="{{URL::to('/delete-comment/'.$comment->comment_id)}}" class="active" ui-toggle-class="" onclick="return confirm('Are you sure?')">
+              <a href="{{URL::to('/delete-order/'.$order->order_id)}}" class="active" ui-toggle-class="" onclick="return confirm('Are you sure?')">
                 <i class="fa fa-times text-danger text" ></i>
-                <?php Session::put('id', $comment->product_id); ?>
               </a>
             </td>
           </tr>
