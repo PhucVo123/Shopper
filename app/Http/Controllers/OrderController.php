@@ -34,6 +34,7 @@ class OrderController extends Controller
                     $order_detail["orderdetail_id_product"] = $val->cart_id_product;
                     $order_detail["orderdetail_id_order"] = DB::table('tbl_order')->max("order_id");
                     $order_detail["orderdetail_status"] = 0;
+                    $order_detail["orderdetail_price"] = DB::table('tbl_product')->where('product_id',$val->cart_id_product)->value('product_price');
                     $order_detail["orderdetail_quantity"] = $val->quantity;
                     DB::table('tbl_order_detail')->insert($order_detail);
                 }
@@ -81,7 +82,7 @@ class OrderController extends Controller
            foreach($order as $idPro=>$pro)
            {
                 $product = DB::table('tbl_product')->where('product_id',$pro->orderdetail_id_product)->get();
-                array_push($ordered, $product,$pro->orderdetail_quantity,$pro->orderdetail_status,$pro->orderdetail_id);
+                array_push($ordered, $product,$pro->orderdetail_quantity,$pro->orderdetail_status,$pro->orderdetail_id,$pro->orderdetail_price);
            }
         }
         //echo ($idOrder);

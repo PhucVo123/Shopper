@@ -17,7 +17,10 @@ return new class extends Migration
             $table->Increments('orderdetail_id');
             $table->string('orderdetail_id_product');
             $table->string('orderdetail_id_order');
+            $table->integer('orderdetail_quantity');
+            $table->integer('orderdetail_price');
             $table->integer('orderdetail_status');
+            $table->integer('orderdetail_status_rating');
         });
     }
 

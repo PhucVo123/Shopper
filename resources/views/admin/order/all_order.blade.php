@@ -41,6 +41,7 @@
             <th>Địa chỉ </th>
             <th>Email</th>
             <th>Sản phẩm</th>
+            <th>Giá sản phẩm</th>
             <th>Yêu cầu thêm</th>
             <th>Đã giao hàng</th>
             <th style="width:30px;"></th>
@@ -59,6 +60,7 @@
             <td>{{ $order->order_address}}</td>
             <td>{{ $order->order_email}}</td>
             <td><a href="{{URL::to('/chi-tiet-san-pham/'.$order->product_id)}}">{{ $order->product_name}}</a></td>
+            <td>{{ $order->orderdetail_price }}</td>
             <td>{{ $order->order_message}}</td>
             <td>
                 <?php

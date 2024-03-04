@@ -35,7 +35,7 @@
 					</thead>
 					<tbody>
                     
-                        @for($i = 0; $i < count($ordered); $i+=4)
+                        @for($i = 0; $i < count($ordered); $i+=5)
                             
                             @foreach($ordered[$i] as $val)
                             
@@ -58,7 +58,7 @@
                                         </div>
                                     </td>
                                     <td class="cart_total">
-                                        <p class="cart_total_price">{{number_format($val->product_price * $ordered[$i+1], 0, '', ',')}} VND</p>
+                                        <p class="cart_total_price">{{number_format($ordered[$i+4] * $ordered[$i+1], 0, '', ',')}} VND</p>
                                         <?php $sum = $sum + ($val->product_price * $ordered[$i+1] ) ?>
                                     </td>
                                     <td class="cart_total">
