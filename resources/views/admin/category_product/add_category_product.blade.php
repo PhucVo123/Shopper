@@ -28,6 +28,15 @@
                                     <textarea style="resize: none;" rows="7" name="description_category" class="form-control" id="description_category"></textarea>
                                 </div>
                                 <div class="form-group">
+                                    <label for="category_id_parent">Thuộc danh mục</label>
+                                    <select class="form-control input-sm- m-bot-15" name="category_id_parent">
+                                        <option value="">Không thuộc</option>
+                                        @foreach($all_category_product as $key)
+                                            <option value="{{$key->category_id}}">{{$key->category_name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-group">
                                     <label for="hide_category">Ẩn/Hiện</label>
                                     <select class="form-control input-sm- m-bot-15" name="hide_category">
                                         <option value="1">Hiển thị</option>

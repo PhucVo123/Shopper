@@ -12,7 +12,27 @@ class CategoryProduct extends Controller
     //
     public function add_category_product()
     {
-        return view('admin.category_product.add_category_product');
+        $all_category_product = DB::table('tbl_category_product')->get();
+        return view('admin.category_product.add_category_product')->with(compact('all_category_product'));
+    }
+    public function convert_meta($str)
+    {
+        $str = preg_replace("/(à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ)/", 'a', $str);
+        $str = preg_replace("/(è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ)/", 'e', $str);
+        $str = preg_replace("/(ì|í|ị|ỉ|ĩ)/", 'i', $str);
+        $str = preg_replace("/(ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ)/", 'o', $str);
+        $str = preg_replace("/(ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ)/", 'u', $str);
+        $str = preg_replace("/(ỳ|ý|ỵ|ỷ|ỹ)/", 'y', $str);
+        $str = preg_replace("/(đ)/", 'd', $str);
+
+        $str = preg_replace("/(À|Á|Ạ|Ả|Ã|Â|Ầ|Ấ|Ậ|Ẩ|Ẫ|Ă|Ằ|Ắ|Ặ|Ẳ|Ẵ)/", 'A', $str);
+        $str = preg_replace("/(È|É|Ẹ|Ẻ|Ẽ|Ê|Ề|Ế|Ệ|Ể|Ễ)/", 'E', $str);
+        $str = preg_replace("/(Ì|Í|Ị|Ỉ|Ĩ)/", 'I', $str);
+        $str = preg_replace("/(Ò|Ó|Ọ|Ỏ|Õ|Ô|Ồ|Ố|Ộ|Ổ|Ỗ|Ơ|Ờ|Ớ|Ợ|Ở|Ỡ)/", 'O', $str);
+        $str = preg_replace("/(Ù|Ú|Ụ|Ủ|Ũ|Ư|Ừ|Ứ|Ự|Ử|Ữ)/", 'U', $str);
+        $str = preg_replace("/(Ỳ|Ý|Ỵ|Ỷ|Ỹ)/", 'Y', $str);
+        $str = preg_replace("/(Đ)/", 'D', $str);
+        return $str;
     }
     public function all_category_product()
     {
@@ -22,11 +42,16 @@ class CategoryProduct extends Controller
     }
     public function save_category_product(Request $request)
     {
+        
+        $meta = str_replace(" ","-",strtolower($this->convert_meta($request->name_category)));
         $data = array();
         $data['category_name'] = $request->name_category;
         $data['category_desc'] = $request->description_category;
         $data['category_status'] = $request->hide_category;
-        $data['created_at'] = Carbon::now('Asia/Ho_Chi_Minh')->toDayDateTimeString()    ;
+        $data['created_at'] = Carbon::now('Asia/Ho_Chi_Minh')->toDayDateTimeString();
+        $data['category_id_parent'] =  $request->category_id_parent;
+        $data['meta'] = $meta;
+
         DB::table('tbl_category_product')->insert($data);
         Session::put('message', 'Thêm danh mục thành công');
         return Redirect::to('add-category-product');
@@ -51,11 +76,13 @@ class CategoryProduct extends Controller
     }
     public function update_category_product(Request $request, $category_product_id)
     {
+        $meta = str_replace(" ","-",strtolower($this->convert_meta($request->name_category)));
         $data = array();
         $data['category_name'] = $request->name_category;
         $data['category_desc'] = $request->description_category;
         $data['category_status'] = $request->hide_category;
-        $data['updated_at'] = Carbon::now('Asia/Ho_Chi_Minh')->toDayDateTimeString()    ;
+        $data['meta'] = $meta;
+        $data['updated_at'] = Carbon::now('Asia/Ho_Chi_Minh')->toDayDateTimeString();
         DB::table('tbl_category_product')->where('category_id',$category_product_id)->update($data);
         Session::put('message', 'Chỉnh sửa danh mục thành công');
         return Redirect::to('all-category-product');

@@ -134,9 +134,10 @@
 					</div>
 					<div class="col-sm-3">
 						<div class="search_box pull-right">
-							<form role="form" action="{{URL::to('/search')}}" method="post" id="searhForm">
+							<form role="form" action="{{URL::to('/search')}}" method="post" id="searchForm">
 							{{ csrf_field() }}
 								<input name="search" id="search" type="text" placeholder="Search"/>
+								<div id="search_autocomplete"></div>
 							</form>
 							
 						</div>
@@ -222,9 +223,33 @@
 						<div class="panel panel-default">
 							<div class="panel-heading">
 								<h4 class="panel-title">
-									<a href="{{URL::to('/danh-muc-san-pham/'.$cat_pro->category_name.'/'.$cat_pro->category_id)}}">
-										{{$cat_pro->category_name}}
-									</a>
+									<div class="menu_item" style="display: inline-block;">
+										<div id="cate_name" style="color: black;">
+											{{$cat_pro->category_name}}
+									</div>
+										
+										@php
+											$child = DB::table('tbl_category_product')->where('category_id_parent',$cat_pro->category_id)->get();
+											echo empty($child);
+											if(!$child->isEmpty())
+											{
+												$output = '<ul class="dropdown-menu">';
+												
+												foreach($child as $allchild)
+												{
+													
+													$url = $allchild->meta.'/'.$allchild->category_id;
+													$output.='
+													<li><a href=/danh-muc-san-pham/'.$url.'>'
+														.$allchild->category_name.'</a></li>';
+												}
+												$output.='</ul>';
+												echo $output;
+											}
+										@endphp
+										
+									</div>
+									
 								</h4>
 							</div>
 						</div>
@@ -424,7 +449,7 @@
 	</footer><!--/Footer-->
 	
 
-  
+	
     <script src="{{asset('/public/Front_end/js/jquery.js')}}"></script>
 	<script src="{{asset('/public/Front_end/js/bootstrap.min.js')}}"></script>
 	<script src="{{asset('/public/Front_end/js/jquery.scrollUp.min.js')}}"></script>
@@ -434,6 +459,8 @@
 	<script src="{{asset('/public/Back_end/js/comment.js')}}"></script>
 	<script src="{{asset('/public/Back_end/js/cart.js')}}"></script>
 	<script src="{{asset('/public/Back_end/js/rating.js')}}"></script>
+	<script src="{{asset('/public/Back_end/js/search.js')}}"></script>
+	<script src="{{asset('/public/Back_end/js/category.js')}}"></script>
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	<script src="sweetalert2.min.js"></script>
 	

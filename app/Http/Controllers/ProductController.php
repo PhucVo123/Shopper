@@ -16,6 +16,26 @@ class ProductController extends Controller
 
         return view('admin.product.add_product')->with('category_product',$category_product)->with('brand',$brand);
     }
+    public function convert_meta($str)
+    {
+        $str = preg_replace("/(à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ)/", 'a', $str);
+        $str = preg_replace("/(è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ)/", 'e', $str);
+        $str = preg_replace("/(ì|í|ị|ỉ|ĩ)/", 'i', $str);
+        $str = preg_replace("/(ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ)/", 'o', $str);
+        $str = preg_replace("/(ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ)/", 'u', $str);
+        $str = preg_replace("/(ỳ|ý|ỵ|ỷ|ỹ)/", 'y', $str);
+        $str = preg_replace("/(đ)/", 'd', $str);
+
+        $str = preg_replace("/(À|Á|Ạ|Ả|Ã|Â|Ầ|Ấ|Ậ|Ẩ|Ẫ|Ă|Ằ|Ắ|Ặ|Ẳ|Ẵ)/", 'A', $str);
+        $str = preg_replace("/(È|É|Ẹ|Ẻ|Ẽ|Ê|Ề|Ế|Ệ|Ể|Ễ)/", 'E', $str);
+        $str = preg_replace("/(Ì|Í|Ị|Ỉ|Ĩ)/", 'I', $str);
+        $str = preg_replace("/(Ò|Ó|Ọ|Ỏ|Õ|Ô|Ồ|Ố|Ộ|Ổ|Ỗ|Ơ|Ờ|Ớ|Ợ|Ở|Ỡ)/", 'O', $str);
+        $str = preg_replace("/(Ù|Ú|Ụ|Ủ|Ũ|Ư|Ừ|Ứ|Ự|Ử|Ữ)/", 'U', $str);
+        $str = preg_replace("/(Ỳ|Ý|Ỵ|Ỷ|Ỹ)/", 'Y', $str);
+        $str = preg_replace("/(Đ)/", 'D', $str);
+        return $str;
+    }
+
     public function all_product()
     {
         $all_product = DB::table('tbl_product')
@@ -27,6 +47,7 @@ class ProductController extends Controller
     }
     public function save_product(Request $request)
     {
+        $meta = str_replace(" ","-",strtolower($this->convert_meta($request->name_product)));
         $data = array();
         $data['product_name'] = $request->name_product;
         $data['product_content'] = $request->content_product;
@@ -35,6 +56,7 @@ class ProductController extends Controller
         $data['category_id'] = $request->category_product;
         $data['brand_id'] = $request->brand_product;
         $data['product_status'] = $request->hide_product;
+        $data['product_meta'] = $meta;
         $data['created_at'] = Carbon::now('Asia/Ho_Chi_Minh')->toDayDateTimeString();
         $get_image = $request->file('img_product');
 
@@ -76,6 +98,7 @@ class ProductController extends Controller
     }
     public function update_product(Request $request, $product_id)
     {
+        $meta = str_replace(" ","-",strtolower($this->convert_meta($request->name_product)));
         $data = array();
         $data['product_name'] = $request->name_product;
         $data['product_content'] = $request->content_product;
@@ -84,6 +107,7 @@ class ProductController extends Controller
         $data['category_id'] = $request->category_product;
         $data['brand_id'] = $request->brand_product;
         $data['product_status'] = $request->hide_product;
+        $data['product_meta'] = $meta;
         $data['updated_at'] = Carbon::now('Asia/Ho_Chi_Minh')->toDayDateTimeString();
         $get_image = $request->file('img_product');
         if($get_image)
@@ -104,14 +128,14 @@ class ProductController extends Controller
         Session::put('message', 'Xóa sản phẩm thành công');
         return Redirect::to('all-product');
     }
-    public function detail_product($product_id)
+    public function detail_product($product_meta,$product_id)
     {
         $get_product = DB::table('tbl_product')
         ->where('tbl_product.product_id',$product_id)->get();
 
         $cate_id = $get_product[0]->category_id;
 
-        $all_category_product = DB::table('tbl_category_product')->get();
+        $all_category_product = DB::table('tbl_category_product')->where('category_id_parent',null)->get();
 
         $all_brand = DB::table('tbl_brand')->get();
 
@@ -223,8 +247,28 @@ class ProductController extends Controller
     public function result_search($keyword)
     {
         $pro = DB::table('tbl_product')->where('product_name','like','%'.$keyword.'%')->get();
-        $all_category_product = DB::table('tbl_category_product')->get();
+        $all_category_product = DB::table('tbl_category_product')->where('category_id_parent',null)->get();
         $all_brand = DB::table('tbl_brand')->get();
         return view("admin.product.search")->with("all_product",$pro)->with('all_category_product',$all_category_product)->with('all_brand',$all_brand);
+    }
+    public function search_auto(Request $request)
+    {
+        $data = $request->all();
+        if($data['query'])
+        {
+            $value = DB::table('tbl_product')->where('product_name','LIKE','%'.$data['query'].'%')->get();
+            $output = '<ul class="dropdown-menu" style="display:block; position:relative; cursor:pointer;">';
+            foreach($value as $key)
+            {
+                $output.= '<a href="/chi-tiet-san-pham/'.$key->product_id.'"><li class="li_search_ajax" 
+                            style="display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            margin-bottom:5px">
+                            <img src="/public/uploads/product/'.$key->product_img.'" width="70px"/>'.$key->product_name.'</li></a>';
+            }
+            $output.= '</ul>';
+            echo $output;
+        }
     }
 }

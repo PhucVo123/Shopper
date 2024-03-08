@@ -18,7 +18,7 @@ Route::get('/login','App\Http\Controllers\HomeController@login');
 Route::post('/save-login','App\Http\Controllers\HomeController@save_login');
 Route::post('/save-logup','App\Http\Controllers\HomeController@save_logup');
 Route::get('/logout_user','App\Http\Controllers\HomeController@logout');
-Route::get('/danh-muc-san-pham/{category_product_name}/{category_product_id}','App\Http\Controllers\HomeController@category');
+Route::get('/danh-muc-san-pham/{category_product_meta}/{category_product_id}','App\Http\Controllers\HomeController@category');
 
 
 
@@ -59,7 +59,7 @@ Route::get('/active-product/{product_id}', 'App\Http\Controllers\ProductControll
 Route::get('/unactive-product/{product_id}', 'App\Http\Controllers\ProductController@unactive_product');
 Route::post('/update-product/{product_id}', 'App\Http\Controllers\ProductController@update_product');
 Route::get('/delete-product/{product_id}', 'App\Http\Controllers\ProductController@delete_product');
-Route::get('/chi-tiet-san-pham/{product_id}','App\Http\Controllers\ProductController@detail_product');
+Route::get('/chi-tiet-san-pham/{product_meta}/{product_id}','App\Http\Controllers\ProductController@detail_product');
 Route::post('/load-comment', 'App\Http\Controllers\ProductController@load_comment');
 Route::post('/send-comment', 'App\Http\Controllers\ProductController@send_comment');
 Route::get('/all-comment', 'App\Http\Controllers\ProductController@all_comment');
@@ -88,4 +88,5 @@ Route::post('/delete-order', 'App\Http\Controllers\OrderController@delete_order'
 Route::get('/completed-order/{pro_id}', 'App\Http\Controllers\OrderController@complete_order');
 //Search
 Route::post('/search', 'App\Http\Controllers\ProductController@search');
+Route::post('/search-ajax', 'App\Http\Controllers\ProductController@search_auto');
 Route::get('/result-search/{keyword}', 'App\Http\Controllers\ProductController@result_search');
